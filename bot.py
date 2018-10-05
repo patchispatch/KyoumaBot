@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from botutil import esPalindromo
 from config import TOKEN
 import logging
 
@@ -31,7 +32,7 @@ def estudiante(bot, update):
 def palindromo(bot, update):
 	texto = update.message.reply_to_message.text
 
-	if texto == texto[::-1]:
+	if esPalindromo(texto):
 		update.message.reply_text(
 			'El texto: " {} " es un palindromo'.format(texto))
 	else:
