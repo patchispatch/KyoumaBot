@@ -29,7 +29,7 @@ def estudiante(bot, update):
 
 # Detecta si una cadena es un palíndromo
 def palindromo(bot, update):
-	texto = update.message.reply_to_message.text
+	texto = update.message.text
 
 	if texto == texto[::-1]:
 		update.message.reply_text(
