@@ -29,7 +29,13 @@ def estudiante(bot, update):
 
 # Detecta si una cadena es un palíndromo
 def palindromo(bot, update):
-	texto = update.message.reply_to_message.text
+	# message.text format "/command text"
+	tmp = update.message.text.split(" ")
+
+	# first element is command
+	tmp.pop(0)
+	# tebuild text back to its form
+	texto = ' '.join(tmp)
 
 	if texto == texto[::-1]:
 		update.message.reply_text(
@@ -46,7 +52,7 @@ def error(bot, update, error):
 def main():
 	# Iniciar el bot
 	# Crear el EventHandler y pasarle el TOKEN de nuestro bot:
-	updater = Updater(TOKEN)
+	updater = Updater(token=TOKEN)
 
 	# Hacer que el dispatcher registre los handlers:
 	dp = updater.dispatcher
