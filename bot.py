@@ -33,7 +33,13 @@ def estudiante(bot, update):
 
 # Detects if a word is a palindrome
 def palindromo(bot, update):
-	texto = update.message.reply_to_message.text
+	# message.text format "/command text"
+	tmp = update.message.text.split(" ")
+
+	# first element is command
+	tmp.pop(0)
+	# tebuild text back to its form
+	texto = ' '.join(tmp)
 
 	if texto == texto[::-1]:
 		message = 'The text: " {} " it is a palindrome'.format(texto)
@@ -52,6 +58,7 @@ def main():
 	# Start the bot
 	# Create the EventHandler and pass the TOKEN of our bot:
 	updater = Updater(TOKEN)
+
 
 	# Have the dispatcher register the handlers:
 	dp = updater.dispatcher
