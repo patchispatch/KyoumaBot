@@ -3,6 +3,7 @@
 import logging
 from config import TOKEN
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+import utils
 
 
 # Enable logging
@@ -39,13 +40,13 @@ def palindromo(bot, update):
 	# first element is command
 	tmp.pop(0)
 	# tebuild text back to its form
-	texto = ' '.join(tmp)
+	msg = ' '.join(tmp)
 
-	if texto == texto[::-1]:
-		message = 'The text: " {} " it is a palindrome'.format(texto)
+	if msg is not "":
+		utils.is_palindrome(bot, update, msg)
 	else:
-		message = 'The text: " {} " it is not a palindrome'.format(texto)
-	update.message.reply_text(message)
+		update.message.reply_text("Pf, ni siquiera sabes introducir algo de texto...\
+		Prueba de nuevo.")
 
 
 # Error handler
