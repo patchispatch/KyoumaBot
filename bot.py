@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
+
 import logging
-
 from config import TOKEN
-from utils import transalate_message
-
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 
@@ -17,9 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 def start(bot, update):
-	message = transalate_message(
-		'Greetings. Meeting you is the choice of the Steins Gate, {}. The. Psy. Kongroo.'. \
-		format(update.message.from_user.first_name))
+	message = 'Saludos, {}. Conocerte es la elección de la Steins Gate. El. Psy. Kongroo.'. \
+				format(update.message.from_user.first_name)
 	update.message.reply_text(message)
 
 # Methods without command:
@@ -28,8 +25,8 @@ def start(bot, update):
 def estudiante(bot, update):
 	msg = update.message.text.lower()
 
-	if transalate_message('alumn') in transalate_message(msg):
-		update.message.reply_text(transalate_message('You are a student.'))
+	if 'alumn' in msg:
+		update.message.reply_text('Eres estudiante, no lo olvides.')
 
 
 # Methods with command:
@@ -42,7 +39,7 @@ def palindromo(bot, update):
 		message = 'The text: " {} " it is a palindrome'.format(texto)
 	else:
 		message = 'The text: " {} " it is not a palindrome'.format(texto)
-	update.message.reply_text(transalate_message(message))
+	update.message.reply_text(message)
 
 
 # Error handler
