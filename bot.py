@@ -71,7 +71,7 @@ def skip_photo(bot, update):
 	logger.info("Usuario %s no envió foto.", user.first_name)
 	update.message.reply_text(
 		"Bueno, entiendo que no te fíes de mí como para mandarme fotos de "
-		"gatos, pero al menos, cuéntame algo sobre ti. "
+		"gatos, pero al menos, envíame tu localización. "
 		"Si no quieres, ya sabes, /skip.")
 
 	return LOCATION
@@ -90,7 +90,7 @@ def skip_location(bot, update):
 
 def skip_bio(bot, update):
 	user = update.message.from_user
-	logger.info("User %s did not send a location.", user.first_name)
+	logger.info("User %s did not send a bio.", user.first_name)
 
 	update.message.reply_text(
 		"Haces bien guardando silencio... Quién sabe si la Organización\
@@ -104,6 +104,8 @@ def bio(bot, update):
 	update.message.reply_text(
 		"Gracias por tu tiempo. Me aseguraré de mantener esta información "
 		"lejos de las manos de la organización. El. Psy. Kongroo.")
+
+	return ConversationHandler.END
 
 def cancel(bot, update):
 	user = update.message.from_user

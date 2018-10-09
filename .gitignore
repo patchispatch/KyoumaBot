@@ -106,4 +106,4 @@ venv.bak/
 
 # Personals
 config.py
-photos
+photos/*.jpg
