@@ -103,7 +103,8 @@ def bio(bot, update):
 	logger.info("Bio of %s: %s", user.first_name, update.message.text)
 	update.message.reply_text(
 		"Gracias por tu tiempo. Me aseguraré de mantener esta información "
-		"lejos de las manos de la organización. El. Psy. Kongroo.")
+		"lejos de las manos de la organización. El. Psy. Kongroo.",
+								reply_markup=ReplyKeyboardRemove())
 
 	return ConversationHandler.END
 
@@ -119,6 +120,7 @@ def estudiante(bot, update):
 ###############################################################################
 # Detects if a word is a palindrome
 
+# States:
 VACIO = range(1)
 
 def palindromo(bot, update):
@@ -143,6 +145,23 @@ def pal_no_text(bot, update):
 	utils.is_palindrome(bot, update, msg)
 
 	return ConversationHandler.END
+
+###############################################################################
+# Sends user's cat photo:
+def cat_photo(bot, update):
+	user = update.message.from_user
+	chat_id = update.message.chat_id
+
+	try:
+		photo = open('photos/{}.jpg'.format(user.first_name), 'rb')
+	except:
+		update.message.reply_text("No puedo enseñarte tu gato si no me lo\
+		enseñas tú primero. Las reglas son las reglas.")
+
+		# Exit function
+		return
+
+	bot.send_photo(chat_id, photo, "Tu supuesto gato es muy bonito.")
 
 ###############################################################################
 # Cancel conversation:
@@ -193,6 +212,7 @@ def main():
 
 	dp.add_handler(conv_start)
 
+	# Conv. handler: palindromo
 	conv_pal = ConversationHandler(
 		entry_points=[CommandHandler('palindromo', palindromo)],
 
@@ -205,8 +225,8 @@ def main():
 
 	dp.add_handler(conv_pal)
 
-	# Commands:
-	dp.add_handler(CommandHandler('start', start))
+	# Command Handler: cat_photo
+	dp.add_handler(CommandHandler('cat', cat_photo))
 
 	# No commands:
 	dp.add_handler(MessageHandler(Filters.text, estudiante))
