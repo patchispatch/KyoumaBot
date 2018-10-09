@@ -107,17 +107,7 @@ def bio(bot, update):
 
 	return ConversationHandler.END
 
-def cancel(bot, update):
-	user = update.message.from_user
-	logger.info("User %s canceled the conversation.", user.first_name)
-	update.message.reply_text("Nos vemos, {}. El. Psy. Kongroo".format(user.first_name),
-								reply_markup=ReplyKeyboardRemove())
-
-	return ConversationHandler.END
-
 ###############################################################################
-# Methods without command:
-
 # Detecta si alguien se refiere a alumnos en vez de a estudiantes
 def estudiante(bot, update):
 	msg = update.message.text.lower()
@@ -126,9 +116,11 @@ def estudiante(bot, update):
 		update.message.reply_text('Eres estudiante, no lo olvides.')
 
 
-# Methods with command:
-
+###############################################################################
 # Detects if a word is a palindrome
+
+VACIO = range(1)
+
 def palindromo(bot, update):
 	# message.text format "/command text"
 	tmp = update.message.text.split(" ")
@@ -140,17 +132,36 @@ def palindromo(bot, update):
 
 	if msg is not "":
 		utils.is_palindrome(bot, update, msg)
+		return ConversationHandler.END
 	else:
-		update.message.reply_text("Pf, ni siquiera sabes introducir algo de texto...\
-		Prueba de nuevo.")
+		update.message.reply_text("Prueba a introducir algo de texto, anda. \
+			Si no quieres, escribe /cancel.")
+		return VACIO
 
+def pal_no_text(bot, update):
+	msg = update.message.text
+	utils.is_palindrome(bot, update, msg)
 
+	return ConversationHandler.END
+
+###############################################################################
+# Cancel conversation:
+def cancel(bot, update):
+	user = update.message.from_user
+	logger.info("User %s canceled the conversation.", user.first_name)
+	update.message.reply_text("Nos vemos, {}. El. Psy. Kongroo".format(user.first_name),
+								reply_markup=ReplyKeyboardRemove())
+
+	return ConversationHandler.END
+
+###############################################################################
 # Error handler
 def error(bot, update, error):
 	"""Log Errors caused by Updates."""
 	logger.warning('Update "%s" caused error "%s"', update, error)
 
-
+###############################################################################
+# Main:
 def main():
 	# Start the bot
 	# Create the EventHandler and pass the TOKEN of our bot:
@@ -161,7 +172,7 @@ def main():
 	dp = updater.dispatcher
 
 	# Conv. handler: start.
-	conv_handler = ConversationHandler(
+	conv_start = ConversationHandler(
 		entry_points=[CommandHandler('start', start)],
 
 		states={
@@ -180,11 +191,22 @@ def main():
 		fallbacks=[CommandHandler('cancel', cancel)]
 	)
 
-	dp.add_handler(conv_handler)
+	dp.add_handler(conv_start)
+
+	conv_pal = ConversationHandler(
+		entry_points=[CommandHandler('palindromo', palindromo)],
+
+		states={
+			VACIO: [MessageHandler(Filters.text, pal_no_text)]
+		},
+
+		fallbacks=[CommandHandler('cancel', cancel)]
+	)
+
+	dp.add_handler(conv_pal)
 
 	# Commands:
 	dp.add_handler(CommandHandler('start', start))
-	dp.add_handler(CommandHandler('palindromo', palindromo))
 
 	# No commands:
 	dp.add_handler(MessageHandler(Filters.text, estudiante))
