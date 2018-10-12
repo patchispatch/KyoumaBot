@@ -4,10 +4,11 @@ import logging
 from config import TOKEN
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
 						  ConversationHandler, RegexHandler)
-from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
+from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, Document)
+import os
 import utils
 
-
+###############################################################################
 # Enable logging
 logging.basicConfig(
 	format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -111,11 +112,12 @@ def bio(bot, update):
 ###############################################################################
 # Detecta si alguien se refiere a alumnos en vez de a estudiantes
 def estudiante(bot, update):
+	user = update.message.from_user
 	msg = update.message.text.lower()
 
 	if 'alumn' in msg:
 		update.message.reply_text('Eres estudiante, no lo olvides.')
-
+		logger.info("{} has written 'alumn*'.".format(user.first_name))
 
 ###############################################################################
 # Detects if a word is a palindrome
@@ -124,6 +126,8 @@ def estudiante(bot, update):
 VACIO = range(1)
 
 def palindromo(bot, update):
+	user = update.message.from_user
+
 	# message.text format "/command text"
 	tmp = update.message.text.split(" ")
 
@@ -133,9 +137,12 @@ def palindromo(bot, update):
 	msg = ' '.join(tmp)
 
 	if msg is not "":
+		logger.info("User {} has put /palindromo with text.".format(user.first_name))
 		utils.is_palindrome(bot, update, msg)
 		return ConversationHandler.END
+
 	else:
+		logger.info("User {} has put /palindromo with no text.".format(user.first_name))
 		update.message.reply_text("Prueba a introducir algo de texto, anda. \
 			Si no quieres, escribe /cancel.")
 		return VACIO
@@ -164,10 +171,36 @@ def cat_photo(bot, update):
 	bot.send_photo(chat_id, photo, "Tu supuesto gato es muy bonito.")
 
 ###############################################################################
+# Sends SCU menu:
+def scu_menu(bot, update):
+	user = update.message.from_user
+	chat_id = update.message.chat_id
+	logger.info("User {} has requested SCU menu.".format(user.first_name))
+
+	# Specify the url of the file:
+	url = 'http://scu.ugr.es/?theme=pdf'
+
+	# Send the doc:
+	bot.send_document(chat_id, url, "Menu.pdf", "Aquí tienes el menú de la semana.")
+
+###############################################################################
+# Sends a beautiful song <3:
+def song(bot, update):
+	user = update.message.from_user
+	chat_id = update.message.chat_id
+	logger.info("User {} has requested a beautiful song.".format(user.first_name))
+
+	# Specify the url of the file:
+	url = 'http://www.csd.gob.es/csd/estaticos/info-inst/Track01.mp3'
+
+	# Send the song:
+	bot.send_document(chat_id, url, "Menu.pdf", "Para ti <3.")
+
+###############################################################################
 # Cancel conversation:
 def cancel(bot, update):
 	user = update.message.from_user
-	logger.info("User %s canceled the conversation.", user.first_name)
+	logger.info("User {} canceled the conversation.".format(user.first_name))
 	update.message.reply_text("Nos vemos, {}. El. Psy. Kongroo".format(user.first_name),
 								reply_markup=ReplyKeyboardRemove())
 
@@ -228,7 +261,13 @@ def main():
 	# Command Handler: cat_photo
 	dp.add_handler(CommandHandler('cat', cat_photo))
 
-	# No commands:
+	# Command handler: menu
+	dp.add_handler(CommandHandler('menu', scu_menu))
+
+	# Command handler: song
+	dp.add_handler(CommandHandler('song', song))
+
+	# Message handler: estudiante:
 	dp.add_handler(MessageHandler(Filters.text, estudiante))
 
 	# Error Handler:
