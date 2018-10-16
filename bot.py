@@ -120,6 +120,24 @@ def estudiante(bot, update):
 		logger.info("{} has written 'alumn*'.".format(user.first_name))
 
 ###############################################################################
+# Written and Directed by Quentin Tarantino:
+def bingo(bot, update):
+	user = update.message.from_user
+	msg = update.message.text.lower()
+	chat_id = update.message.chat_id
+	url = "https://goo.gl/Lyp7V7"
+
+	if 'bingo' in msg:
+		bot.send_photo(chat_id, url, "Es un BINGO")
+		logger.info("{} has written 'bingo'.".format(user.first_name))
+
+###############################################################################
+# Filters:
+def filtros(bot, update):
+	bingo(bot, update)
+	estudiante(bot, update)
+
+###############################################################################
 # Detects if a word is a palindrome
 
 # States:
@@ -267,8 +285,8 @@ def main():
 	# Command handler: song
 	dp.add_handler(CommandHandler('song', song))
 
-	# Message handler: estudiante:
-	dp.add_handler(MessageHandler(Filters.text, estudiante))
+	# Message handlers:
+	dp.add_handler(MessageHandler(Filters.text, filtros))
 
 	# Error Handler:
 	dp.add_error_handler(error)
