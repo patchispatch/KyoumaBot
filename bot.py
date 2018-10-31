@@ -213,6 +213,14 @@ def song(bot, update):
 
 	# Send the song:
 	bot.send_document(chat_id, url, "Menu.pdf", "Para ti <3.")
+#######################################################################
+###################################################################
+#DEIIT
+def deiit(bot, update):
+	logger.info("User {} has requested a deiit.".format(user.first_name))
+	update.message.reply_text(
+		"DEIIT.UNA GRANDE Y LIBRE")
+
 
 ###############################################################################
 # Cancel conversation:
