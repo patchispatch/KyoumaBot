@@ -120,6 +120,17 @@ def estudiante(bot, update):
 		logger.info("{} has written 'alumn*'.".format(user.first_name))
 
 ###############################################################################
+# Detecta si alguien pregunta por Homer
+def homer(bot, update):
+    user = update.message.from_user
+    msg = update.message.text.lower()
+    
+    if 'homer' or 'Homer' in msg:
+        update.message.reply_text('¿Homer? ¿Quién es Homer? Yo me llamo tipo de \incógnito.')
+        logger.info("{} has written 'homer'.".format(user.first_name))
+
+
+###############################################################################
 # Written and Directed by Quentin Tarantino:
 def bingo(bot, update):
 	user = update.message.from_user
@@ -136,6 +147,7 @@ def bingo(bot, update):
 def filtros(bot, update):
 	bingo(bot, update)
 	estudiante(bot, update)
+    homer(bot, update)
 
 ###############################################################################
 # Detects if a word is a palindrome
