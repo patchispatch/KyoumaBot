@@ -120,6 +120,17 @@ def estudiante(bot, update):
 		logger.info("{} has written 'alumn*'.".format(user.first_name))
 
 ###############################################################################
+# Detecta si alguien pregunta por Homer
+def homer(bot, update):
+    user = update.message.from_user
+    msg = update.message.text.lower()
+    
+    if 'homer' or 'Homer' in msg:
+        update.message.reply_text('¿Homer? ¿Quién es Homer? Yo me llamo tipo de \incógnito.')
+        logger.info("{} has written 'homer'.".format(user.first_name))
+
+
+###############################################################################
 # Written and Directed by Quentin Tarantino:
 def bingo(bot, update):
 	user = update.message.from_user
@@ -136,6 +147,7 @@ def bingo(bot, update):
 def filtros(bot, update):
 	bingo(bot, update)
 	estudiante(bot, update)
+    homer(bot, update)
 
 ###############################################################################
 # Detects if a word is a palindrome
@@ -213,14 +225,25 @@ def song(bot, update):
 
 	# Send the song:
 	bot.send_document(chat_id, url, "Menu.pdf", "Para ti <3.")
+  
+
 #######################################################################
 ###################################################################
 #DEIIT
 def deiit(bot, update):
-	logger.info("User {} has requested a deiit.".format(user.first_name))
-	update.message.reply_text(
-		"DEIIT.UNA GRANDE Y LIBRE")
+  logger.info("User {} has requested a deiit.".format(user.first_name))
+  update.message.reply_text("DEIIT.UNA GRANDE Y LIBRE")
+	
 
+###############################################################################
+# Never gives you up:
+def never_give_up(bot, update):
+	user = update.message.from_user
+	chat_id = update.message.chat_id
+	logger.info("User {} has activated my trap card.".format(user.first_name))
+
+	# Send the video:
+	update.message.reply_text("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
 
 ###############################################################################
 # Cancel conversation:
@@ -292,6 +315,9 @@ def main():
 
 	# Command handler: song
 	dp.add_handler(CommandHandler('song', song))
+	
+	# Command handler: never_give_up
+	dp.add_handler(CommandHandler('never_give_up', never_give_up))
 
 	# Message handlers:
 	dp.add_handler(MessageHandler(Filters.text, filtros))
