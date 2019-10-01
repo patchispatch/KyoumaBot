@@ -213,6 +213,17 @@ def song(bot, update):
 
 	# Send the song:
 	bot.send_document(chat_id, url, "Menu.pdf", "Para ti <3.")
+	
+
+###############################################################################
+# Never gives you up:
+def never_give_up(bot, update):
+	user = update.message.from_user
+	chat_id = update.message.chat_id
+	logger.info("User {} has activated my trap card.".format(user.first_name))
+
+	# Send the video:
+	update.message.reply_text("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
 
 ###############################################################################
 # Cancel conversation:
@@ -284,6 +295,9 @@ def main():
 
 	# Command handler: song
 	dp.add_handler(CommandHandler('song', song))
+	
+	# Command handler: never_give_up
+	dp.add_handler(CommandHandler('never_give_up', never_give_up))
 
 	# Message handlers:
 	dp.add_handler(MessageHandler(Filters.text, filtros))
